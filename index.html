@@ -90,9 +90,16 @@
       const { useState, useEffect } = React;
 
       // --- Components/Icons.tsx ---
-      const IconX = ({ className }) => (
+      const IconTwitter = ({ className }) => (
         <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
           <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
+      );
+
+      const IconClose = ({ className }) => (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       );
 
@@ -195,7 +202,7 @@
                   }}
                   aria-label="Close"
                 >
-                  <IconX className="w-8 h-8 md:w-10 md:h-10" />
+                  <IconClose className="w-8 h-8 md:w-10 md:h-10" />
                 </button>
                 
                 <div className="relative max-w-7xl max-h-[90vh] w-full flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
@@ -231,7 +238,7 @@
                     className="group flex flex-col items-center gap-1 text-gray-400 hover:text-white transition-colors"
                   >
                     <div className="p-3 bg-[#424242] rounded-full group-hover:bg-[#08a3e6] transition-colors">
-                       <IconX className="w-5 h-5" />
+                       <IconTwitter className="w-5 h-5" />
                     </div>
                     <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity">X (Twitter)</span>
                   </a>
@@ -275,13 +282,15 @@
 
       // --- Main App Logic (App.tsx) ---
       const soloTracks = [
-        "Fs100",
-        "Fs200",
-        "Fs225 F",
-        "Fs400 F",
-        "Fs Wurly",
-        "Fs Void",
-        "FS Rebellion"
+        { title: "Fs100", embedUrl: "https://www.youtube.com/embed/TIW4KQ-5W3c?si=V4VOUpKFEPHeB1Wc" },
+        { title: "Fs200", embedUrl: "https://www.youtube.com/embed/XKrQ6TUUNug?si=AKb-WO5TTqENdEHH" },
+        { title: "Fs225 F", embedUrl: "https://www.youtube.com/embed/VUvOEpmIaJA?si=gsUAvRKG8vsZNc6A" },
+        { title: "Fs Soul", embedUrl: "https://www.youtube.com/embed/PpCb8hl1Pyc?si=nICSNvQ9BimWeUsl" },
+        { title: "Fs Luos", embedUrl: "https://www.youtube.com/embed/FYb1mzMDoB8?si=gwHXUzXnk0R2MVay" },
+        { title: "Fs400 F", embedUrl: "https://www.youtube.com/embed/HA2nCJhQ4gk?si=GX9i6Fc4T7tXkDSh" },
+        { title: "Fs Wurly", embedUrl: "https://www.youtube.com/embed/zXKRT0C5kzM?si=azfGGZpxE-e_DqeL" },
+        { title: "Fs Void", embedUrl: "https://www.youtube.com/embed/H9cUKlZNP_w?si=3LGRNYrZQphvVGkP" },
+        { title: "FS Rebellion", embedUrl: "https://www.youtube.com/embed/4Fhk3G_3X58?si=C4ucDDqfX1vFOhJa" }
       ];
 
       const denisKentTracks = [
@@ -314,6 +323,16 @@
       );
 
       const App = () => {
+        const [selectedTrack, setSelectedTrack] = useState(null);
+
+        useEffect(() => {
+          const handleEsc = (e) => {
+            if (e.key === 'Escape') setSelectedTrack(null);
+          };
+          if (selectedTrack) window.addEventListener('keydown', handleEsc);
+          return () => window.removeEventListener('keydown', handleEsc);
+        }, [selectedTrack]);
+
         return (
           <div className="min-h-screen text-gray-100 font-sans selection:bg-[#f38d3b] selection:text-black">
             <BackgroundVideo />
@@ -419,17 +438,20 @@
                           </div>
                           
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            {soloTracks.map((track, index) => (
+                            {soloTracks.map((track, index) => {
+                              const isSelected = selectedTrack === track;
+                              return (
                               <div 
                                 key={index}
-                                className="group flex items-center justify-between p-4 bg-[#424242]/20 rounded-lg hover:bg-[#424242]/60 border border-transparent hover:border-[#02a9f3]/30 transition-all duration-300 cursor-default"
+                                onClick={() => setSelectedTrack(track)}
+                                className={`group flex items-center justify-between p-4 bg-[#424242]/20 rounded-lg hover:bg-[#424242]/60 border transition-all duration-300 cursor-pointer ${isSelected ? 'border-[#02a9f3]/50 bg-[#424242]/40' : 'border-transparent hover:border-[#02a9f3]/30'}`}
                               >
-                                <span className="font-mono text-gray-300 group-hover:text-white transition-colors">
-                                  {track}
+                                <span className={`font-mono transition-colors ${isSelected ? 'text-white' : 'text-gray-300 group-hover:text-white'}`}>
+                                  {track.title}
                                 </span>
-                                <div className="w-2 h-2 rounded-full bg-[#424242] group-hover:bg-[#02a9f3] transition-colors shadow-[0_0_5px_rgba(2,169,243,0)] group-hover:shadow-[0_0_8px_rgba(2,169,243,0.8)]"></div>
+                                <div className={`w-2 h-2 rounded-full transition-colors ${isSelected ? 'bg-[#02a9f3] shadow-[0_0_8px_rgba(2,169,243,0.8)]' : 'bg-[#424242] group-hover:bg-[#02a9f3] shadow-[0_0_5px_rgba(2,169,243,0)] group-hover:shadow-[0_0_8px_rgba(2,169,243,0.8)]'}`}></div>
                               </div>
-                            ))}
+                            )})}
                           </div>
                        </div>
                     </section>
@@ -457,6 +479,37 @@
               
               <Footer />
             </div>
+
+            {selectedTrack && ReactDOM.createPortal(
+              <div 
+                className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4 animate-fade-in"
+                onClick={() => setSelectedTrack(null)}
+              >
+                <button 
+                  className="absolute top-4 right-4 sm:top-6 sm:right-6 text-white/70 hover:text-[#f38d3b] transition-colors z-[10000] p-2 hover:bg-white/10 rounded-full"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedTrack(null);
+                  }}
+                  aria-label="Close"
+                >
+                  <IconClose className="w-8 h-8 md:w-10 md:h-10" />
+                </button>
+                
+                <div className="relative w-full max-w-4xl aspect-video flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                  <iframe 
+                    className="w-full h-full rounded-lg shadow-2xl ring-1 ring-white/10"
+                    src={selectedTrack.embedUrl} 
+                    title="YouTube video player" 
+                    frameBorder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerPolicy="strict-origin-when-cross-origin" 
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              </div>,
+              document.body
+            )}
           </div>
         );
       };
