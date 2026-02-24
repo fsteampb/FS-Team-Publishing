@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FS Team Publishing</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              fs: {
+                black: '#1b1b1b',
+                gray: '#424242',
+                orange: '#f38d3b',
+                blue: '#08a3e6',
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', 'system-ui', 'sans-serif'],
+            },
+            animation: {
+              'fade-in-down': 'fadeInDown 1s ease-out',
+              'fade-in': 'fadeIn 0.2s ease-out',
+            },
+            keyframes: {
+              fadeInDown: {
+                '0%': { opacity: '0', transform: 'translateY(-20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              }
+            }
+          },
+        },
+      }
+    </script>
+
+    <!-- Google Fonts -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+      
+      body {
+        background-color: #1b1b1b;
+        color: white;
+      }
+      
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #1b1b1b;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #424242;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #f38d3b;
+      }
+    </style>
+
+    <!-- React & ReactDOM (Development versions for standalone usage) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX transformation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect } = React;
+
+      // --- Components/Icons.tsx ---
+      const IconX = ({ className }) => (
+        <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
+      );
+
+      const IconYouTube = ({ className }) => (
+        <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
+          <path fillRule="evenodd" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" clipRule="evenodd" />
+        </svg>
+      );
+
+      const IconMail = ({ className }) => (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+          <rect width="20" height="16" x="2" y="4" rx="2" />
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+        </svg>
+      );
+
+      // --- Components/BackgroundVideo.tsx ---
+      const BackgroundVideo = () => {
+        return (
+          <div className="fixed top-0 left-0 w-full h-full -z-50 overflow-hidden">
+            <div className="absolute inset-0 bg-[#1b1b1b]/80 backdrop-blur-sm z-10" />
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover"
+              src="https://cdn.akamai.steamstatic.com/steamcommunity/public/images/items/2512200/a4f94af7fc96d4b9c78842031d22712e916f1117.mp4"
+            />
+          </div>
+        );
+      };
+
+      // --- Components/Header.tsx ---
+      const Header = () => {
+        return (
+          <header className="flex flex-col items-center justify-center py-12 animate-fade-in-down">
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-[#f38d3b] to-[#08a3e6] rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+              <img
+                src="https://pbs.twimg.com/media/HBdWq-bW0AAPUHl?format=jpg&name=small"
+                alt="FS Team Publishing Logo"
+                className="relative w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-[#424242] shadow-2xl object-cover"
+              />
+            </div>
+            <h1 className="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight text-white text-center">
+              FS Team <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#f38d3b] to-[#08a3e6]">Publishing</span>
+            </h1>
+          </header>
+        );
+      };
+
+      // --- Components/NewsBoard.tsx ---
+      const NewsBoard = () => {
+        const [isOpen, setIsOpen] = useState(false);
+
+        useEffect(() => {
+          const handleEsc = (e) => {
+            if (e.key === 'Escape') setIsOpen(false);
+          };
+          if (isOpen) window.addEventListener('keydown', handleEsc);
+          return () => window.removeEventListener('keydown', handleEsc);
+        }, [isOpen]);
+
+        return (
+          <>
+            <div 
+              className="bg-[#424242]/50 p-1 rounded-xl shadow-lg border border-[#f38d3b]/20 hover:border-[#f38d3b]/50 transition-all duration-300 cursor-pointer group"
+              onClick={() => setIsOpen(true)}
+            >
+              <div className="relative w-full aspect-square overflow-hidden rounded-lg">
+                <img
+                  src="https://pbs.twimg.com/media/HBKQA22W0AA6ZcO?format=jpg&name=medium"
+                  alt="News Board Update"
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+                <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-4">
+                  <p className="text-white font-semibold text-sm uppercase tracking-wider group-hover:text-[#f38d3b] transition-colors">Latest News</p>
+                </div>
+                {/* Zoom Indicator */}
+                <div className="absolute top-2 right-2 p-2 bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
+                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                   </svg>
+                </div>
+              </div>
+            </div>
+
+            {isOpen && ReactDOM.createPortal(
+              <div 
+                className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4 animate-fade-in"
+                onClick={() => setIsOpen(false)}
+              >
+                {/* Close Button */}
+                <button 
+                  className="absolute top-4 right-4 sm:top-6 sm:right-6 text-white/70 hover:text-[#f38d3b] transition-colors z-[10000] p-2 hover:bg-white/10 rounded-full"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsOpen(false);
+                  }}
+                  aria-label="Close"
+                >
+                  <IconX className="w-8 h-8 md:w-10 md:h-10" />
+                </button>
+                
+                <div className="relative max-w-7xl max-h-[90vh] w-full flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                  <img
+                    src="https://pbs.twimg.com/media/HBKQA22W0AA6ZcO?format=jpg&name=medium"
+                    alt="News Board Update Full"
+                    className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl ring-1 ring-white/10 select-none"
+                  />
+                </div>
+              </div>,
+              document.body
+            )}
+          </>
+        );
+      };
+
+      // --- Components/Footer.tsx ---
+      const Footer = () => {
+        const currentYear = 2026; 
+
+        return (
+          <footer className="mt-16 border-t border-[#424242] bg-[#1b1b1b] py-12">
+            <div className="max-w-4xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+              
+              {/* Social Links */}
+              <div className="flex flex-col items-center md:items-start gap-4">
+                <h3 className="text-[#f38d3b] font-bold text-sm uppercase tracking-widest">Connect</h3>
+                <div className="flex gap-6">
+                  <a 
+                    href="https://x.com/fs_team_pb" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group flex flex-col items-center gap-1 text-gray-400 hover:text-white transition-colors"
+                  >
+                    <div className="p-3 bg-[#424242] rounded-full group-hover:bg-[#08a3e6] transition-colors">
+                       <IconX className="w-5 h-5" />
+                    </div>
+                    <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity">X (Twitter)</span>
+                  </a>
+
+                  <a 
+                    href="https://www.youtube.com/@FSTeamPublishing" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group flex flex-col items-center gap-1 text-gray-400 hover:text-white transition-colors"
+                  >
+                    <div className="p-3 bg-[#424242] rounded-full group-hover:bg-[#ff0000] transition-colors">
+                      <IconYouTube className="w-5 h-5" />
+                    </div>
+                     <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity">YouTube</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Contact */}
+              <div className="flex flex-col items-center md:items-start gap-4">
+                <h3 className="text-[#f38d3b] font-bold text-sm uppercase tracking-widest">Contact</h3>
+                <a 
+                  href="https://mail.google.com/mail/?view=cm&fs=1&to=con1fsteam@gmail.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 px-6 py-3 bg-[#424242] rounded-lg hover:bg-[#08a3e6] transition-all duration-300 group"
+                >
+                  <IconMail className="w-5 h-5 text-gray-300 group-hover:text-white" />
+                  <span className="text-gray-200 group-hover:text-white font-medium">con1fsteam@gmail.com</span>
+                </a>
+              </div>
+            </div>
+
+            <div className="mt-12 text-center text-gray-500 text-sm border-t border-[#424242]/50 pt-8">
+              <p className="font-medium text-white mb-2">FS Team Publishing</p>
+              <p>&copy; {currentYear} Forti Fores/FS Team</p>
+            </div>
+          </footer>
+        );
+      };
+
+      // --- Main App Logic (App.tsx) ---
+      const soloTracks = [
+        "Fs100",
+        "Fs200",
+        "Fs225 F",
+        "Fs400 F",
+        "Fs Wurly",
+        "Fs Void",
+        "FS Rebellion"
+      ];
+
+      const denisKentTracks = [
+        {
+          title: "Voice Vision",
+          url: "https://www.youtube.com/watch?v=3L_atZYe8Mg",
+          date: "2024-02-19"
+        },
+        {
+          title: "Bit fit",
+          url: "https://www.youtube.com/watch?v=Wf6Bj--Uhzk",
+          date: "2024-02-20"
+        }
+      ];
+
+      const FortiForesLink = () => (
+        <a 
+          href="https://lnkfi.re/forti_fores" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-0.5 font-bold group hover:scale-105 transition-transform duration-300 align-baseline whitespace-nowrap"
+        >
+          <span className="text-[#ff6928] drop-shadow-[0_0_2px_rgba(255,105,40,0.5)] group-hover:drop-shadow-[0_0_8px_rgba(255,105,40,1)] transition-all duration-300">
+            Forti
+          </span>
+          <span className="ml-1 text-[#02a9f3] drop-shadow-[0_0_2px_rgba(2,169,243,0.5)] group-hover:drop-shadow-[0_0_8px_rgba(2,169,243,1)] transition-all duration-300">
+            Fores
+          </span>
+        </a>
+      );
+
+      const App = () => {
+        return (
+          <div className="min-h-screen text-gray-100 font-sans selection:bg-[#f38d3b] selection:text-black">
+            <BackgroundVideo />
+            
+            <div className="relative z-10 flex flex-col min-h-screen">
+              <main className="flex-grow w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+                
+                <Header />
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
+                  
+                  {/* Left Column: Info & Tracks */}
+                  <div className="lg:col-span-7 space-y-8">
+                    
+                    {/* About Us */}
+                    <section className="bg-[#1b1b1b]/60 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-[#424242] shadow-2xl">
+                      <div className="flex items-center gap-2 mb-4">
+                         <div className="h-8 w-1 bg-[#f38d3b] rounded-full"></div>
+                         <h2 className="text-2xl font-bold text-white">About Us</h2>
+                      </div>
+                      
+                      <div className="space-y-4 text-gray-300 leading-relaxed">
+                        <p className="flex flex-wrap gap-2 items-center">
+                          <span className="text-[#08a3e6] font-semibold">Members:</span> 
+                          <FortiForesLink />, Denis Kent ... 
+                          <span className="text-gray-500 italic">(waiting for new participants)</span>
+                        </p>
+                        
+                        <div className="bg-[#424242]/30 p-4 rounded-lg border-l-2 border-[#f38d3b]">
+                          <p className="text-sm md:text-base leading-relaxed">
+                            Our publishing and <FortiForesLink /> have released only one track together: <span className="text-white font-bold">Fs Metallic</span>.
+                          </p>
+                          <p className="text-sm md:text-base mt-3 leading-relaxed">
+                            All other tracks with the suffix <span className="font-mono text-[#f38d3b]">FS</span> listed below were not released by us, but were released exclusively by <FortiForesLink />.
+                          </p>
+                        </div>
+                      </div>
+                    </section>
+
+                    {/* Track Catalog */}
+                    <section className="bg-[#1b1b1b]/60 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-[#424242] shadow-2xl">
+                      <div className="flex items-center gap-2 mb-6">
+                         <div className="h-8 w-1 bg-[#08a3e6] rounded-full"></div>
+                         <h2 className="text-2xl font-bold text-white">Track Catalog</h2>
+                      </div>
+
+                      {/* Joint Release Highlight */}
+                       <div className="mb-8 p-6 bg-gradient-to-r from-[#f38d3b]/10 to-[#08a3e6]/10 rounded-xl border border-white/10 relative overflow-hidden group hover:border-white/20 transition-colors">
+                          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <svg className="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                          </div>
+                          <h3 className="text-xs font-bold text-[#f38d3b] uppercase tracking-widest mb-2">Exclusive Joint Release</h3>
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 z-10 relative">
+                            <a href="https://youtu.be/mFwBtNsiIGs?si=2z0Ghvw9vwVshSH6" target="_blank" rel="noopener noreferrer" className="text-3xl font-extrabold text-white tracking-tight hover:text-[#f38d3b] transition-colors">Fs Metallic</a>
+                            <div className="flex items-center gap-2 text-gray-400 text-sm">
+                              <span>by FS Team Publishing &</span>
+                              <FortiForesLink />
+                            </div>
+                          </div>
+                       </div>
+
+                       {/* Denis Kent & FS Team Section */}
+                       <div className="mb-8">
+                          <div className="flex items-center gap-3 mb-4 pb-2 border-b border-[#424242]/50">
+                             <h3 className="text-lg font-semibold text-gray-200">
+                               FS Team & <span className="text-white font-bold">Denis Kent</span>
+                             </h3>
+                          </div>
+                          
+                          <div className="space-y-3">
+                            {denisKentTracks.map((track, index) => (
+                              <a 
+                                key={index}
+                                href={track.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-[#424242]/30 rounded-lg hover:bg-[#424242]/60 border border-transparent hover:border-white/30 transition-all duration-300 group"
+                              >
+                                <div className="flex items-center gap-4">
+                                   <div className="p-3 bg-red-600/20 rounded-full text-red-500 group-hover:text-red-400 group-hover:bg-red-600/30 transition-colors">
+                                     <IconYouTube className="w-6 h-6" />
+                                   </div>
+                                   <div>
+                                     <h4 className="text-xl font-bold text-white group-hover:text-[#f38d3b] transition-colors">{track.title}</h4>
+                                     <p className="text-sm text-gray-400 mt-1">Released on: {track.date}</p>
+                                   </div>
+                                </div>
+                                
+                                <div className="mt-3 sm:mt-0 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-[-10px] group-hover:translate-x-0">
+                                   <span className="text-xs font-bold uppercase tracking-widest text-[#08a3e6]">Listen Now &rarr;</span>
+                                </div>
+                              </a>
+                            ))}
+                          </div>
+                       </div>
+
+                       {/* Forti Fores Solo Section */}
+                       <div>
+                          <div className="flex items-center gap-3 mb-4 pb-2 border-b border-[#424242]/50">
+                             <h3 className="text-lg font-semibold text-gray-200">
+                               Tracks by <FortiForesLink />
+                             </h3>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {soloTracks.map((track, index) => (
+                              <div 
+                                key={index}
+                                className="group flex items-center justify-between p-4 bg-[#424242]/20 rounded-lg hover:bg-[#424242]/60 border border-transparent hover:border-[#02a9f3]/30 transition-all duration-300 cursor-default"
+                              >
+                                <span className="font-mono text-gray-300 group-hover:text-white transition-colors">
+                                  {track}
+                                </span>
+                                <div className="w-2 h-2 rounded-full bg-[#424242] group-hover:bg-[#02a9f3] transition-colors shadow-[0_0_5px_rgba(2,169,243,0)] group-hover:shadow-[0_0_8px_rgba(2,169,243,0.8)]"></div>
+                              </div>
+                            ))}
+                          </div>
+                       </div>
+                    </section>
+
+                  </div>
+
+                  {/* Right Column: News Board */}
+                  <div className="lg:col-span-5">
+                    <div className="sticky top-8">
+                       <div className="bg-[#1b1b1b]/60 backdrop-blur-md rounded-2xl p-6 border border-[#424242] shadow-2xl">
+                          <div className="flex items-center gap-2 mb-6">
+                            <div className="h-8 w-1 bg-white rounded-full"></div>
+                            <h2 className="text-2xl font-bold text-white">News Board</h2>
+                          </div>
+                          <NewsBoard />
+                          <div className="mt-4 text-center">
+                             <p className="text-xs text-gray-500 uppercase tracking-widest">Official Updates</p>
+                          </div>
+                       </div>
+                    </div>
+                  </div>
+
+                </div>
+              </main>
+              
+              <Footer />
+            </div>
+          </div>
+        );
+      };
+
+      // --- Initialization ---
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      );
+    </script>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
