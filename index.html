@@ -116,6 +116,12 @@
         </svg>
       );
 
+      const IconSoundCloud = ({ className }) => (
+        <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
+          <path d="M11.968 14.619v-4.8c0-.73.466-1.558.917-2.091l.056-.062a.331.331 0 0 1 .491.026.345.345 0 0 1 .054.264l-.535 2.502.937-2.738a.332.332 0 0 1 .536-.129l.024.024c.484.532.915 1.341.915 2.052v4.952h-3.395zm-1.02-3.8v3.8H9.791v-3.8a6.386 6.386 0 0 0-.256-1.895l.088.087a2.535 2.535 0 0 1 .737 1.808v0zm-2.062 0v3.8H7.728v-3.8c0-.528-.152-1.033-.427-1.464l.135.132a2.003 2.003 0 0 1 .488 1.332v0zm-1.89 0v3.8H5.838v-3.8a1.597 1.597 0 0 0-.585-1.229l.169.155a1.536 1.536 0 0 1 .39 1.074v0zm-1.637 0v3.8H4.202v-3.8c0-.325-.138-.636-.381-.856l.162.13a1.096 1.096 0 0 1 .28.726v0zm-1.408 0v3.8H2.793v-3.8c0-.214-.1-.417-.272-.562l.142.098a.715.715 0 0 1 .184.464v0zm-.803.181v3.619h-.795v-3.619a.44.44 0 0 0-.102-.284l.08.04v.244zm11.364 3.619h7.324c1.68 0 3.05-1.442 3.05-3.21 0-1.74-1.31-3.158-2.92-3.21a4.207 4.207 0 0 0-4.076-3.149 4.256 4.256 0 0 0-4.048 2.871l-.105.31h.775z"/>
+        </svg>
+      );
+
       // --- Components/BackgroundVideo.tsx ---
       const BackgroundVideo = () => {
         return (
@@ -172,7 +178,7 @@
             >
               <div className="relative w-full aspect-square overflow-hidden rounded-lg">
                 <img
-                  src="https://pbs.twimg.com/media/HBKQA22W0AA6ZcO?format=jpg&name=medium"
+                  src="https://pbs.twimg.com/media/HGHJ_JVXoAEDVdG?format=jpg&name=large"
                   alt="News Board Update"
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
@@ -207,7 +213,7 @@
                 
                 <div className="relative max-w-7xl max-h-[90vh] w-full flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
                   <img
-                    src="https://pbs.twimg.com/media/HBKQA22W0AA6ZcO?format=jpg&name=medium"
+                    src="https://pbs.twimg.com/media/HGHJ_JVXoAEDVdG?format=jpg&name=large"
                     alt="News Board Update Full"
                     className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl ring-1 ring-white/10 select-none"
                   />
@@ -225,40 +231,52 @@
 
         return (
           <footer className="mt-16 border-t border-[#424242] bg-[#1b1b1b] py-12">
-            <div className="max-w-4xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div className="max-w-4xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 place-items-center">
               
               {/* Social Links */}
-              <div className="flex flex-col items-center md:items-start gap-4">
+              <div className="flex flex-col items-center gap-4">
                 <h3 className="text-[#f38d3b] font-bold text-sm uppercase tracking-widest">Connect</h3>
                 <div className="flex gap-6">
                   <a 
                     href="https://x.com/fs_team_pb" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="group flex flex-col items-center gap-1 text-gray-400 hover:text-white transition-colors"
+                    className="group relative flex flex-col items-center text-gray-400 hover:text-white transition-colors"
                   >
                     <div className="p-3 bg-[#424242] rounded-full group-hover:bg-[#08a3e6] transition-colors">
                        <IconTwitter className="w-5 h-5" />
                     </div>
-                    <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity">X (Twitter)</span>
+                    <span className="absolute -bottom-5 text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">X (Twitter)</span>
                   </a>
 
                   <a 
                     href="https://www.youtube.com/@FSTeamPublishing" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="group flex flex-col items-center gap-1 text-gray-400 hover:text-white transition-colors"
+                    className="group relative flex flex-col items-center text-gray-400 hover:text-white transition-colors"
                   >
                     <div className="p-3 bg-[#424242] rounded-full group-hover:bg-[#ff0000] transition-colors">
                       <IconYouTube className="w-5 h-5" />
                     </div>
-                     <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity">YouTube</span>
+                     <span className="absolute -bottom-5 text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">YouTube</span>
+                  </a>
+
+                  <a 
+                    href="https://soundcloud.com/fs-team-publishing" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group relative flex flex-col items-center text-gray-400 hover:text-white transition-colors"
+                  >
+                    <div className="p-3 bg-[#424242] rounded-full group-hover:bg-[#ff5500] transition-colors">
+                      <IconSoundCloud className="w-5 h-5" />
+                    </div>
+                     <span className="absolute -bottom-5 text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">SoundCloud</span>
                   </a>
                 </div>
               </div>
 
               {/* Contact */}
-              <div className="flex flex-col items-center md:items-start gap-4">
+              <div className="flex flex-col items-center gap-4 pb-4">
                 <h3 className="text-[#f38d3b] font-bold text-sm uppercase tracking-widest">Contact</h3>
                 <a 
                   href="https://mail.google.com/mail/?view=cm&fs=1&to=con1fsteam@gmail.com" 
@@ -363,7 +381,7 @@
                         
                         <div className="bg-[#424242]/30 p-4 rounded-lg border-l-2 border-[#f38d3b]">
                           <p className="text-sm md:text-base leading-relaxed">
-                            Our publishing and <FortiForesLink /> have released only one track together: <span className="text-white font-bold">Fs Metallic</span>.
+                            Our publishing and <FortiForesLink /> have released tracks together, including <span className="text-white font-bold">Fs Metallic</span> and <span className="text-white font-bold">Nowhere</span>.
                           </p>
                           <p className="text-sm md:text-base mt-3 leading-relaxed">
                             All other tracks with the suffix <span className="font-mono text-[#f38d3b]">FS</span> listed below were not released by us, but were released exclusively by <FortiForesLink />.
@@ -390,12 +408,23 @@
                           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                             <svg className="w-24 h-24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                           </div>
-                          <h3 className="text-xs font-bold text-[#f38d3b] uppercase tracking-widest mb-2">Exclusive Joint Release</h3>
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 z-10 relative">
-                            <a href="https://youtu.be/mFwBtNsiIGs?si=2z0Ghvw9vwVshSH6" target="_blank" rel="noopener noreferrer" className="text-3xl font-extrabold text-white tracking-tight hover:text-[#f38d3b] transition-colors">Fs Metallic</a>
-                            <div className="flex items-center gap-2 text-gray-400 text-sm">
-                              <span>by FS Team Publishing &</span>
-                              <FortiForesLink />
+                          <h3 className="text-xs font-bold text-[#f38d3b] uppercase tracking-widest mb-4">Exclusive Joint Releases</h3>
+                          
+                          <div className="space-y-4">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 z-10 relative">
+                              <a href="https://youtu.be/mFwBtNsiIGs?si=2z0Ghvw9vwVshSH6" target="_blank" rel="noopener noreferrer" className="text-3xl font-extrabold text-white tracking-tight hover:text-[#f38d3b] transition-colors">Fs Metallic</a>
+                              <div className="flex items-center gap-2 text-gray-400 text-sm">
+                                <span>by FS Team Publishing &</span>
+                                <FortiForesLink />
+                              </div>
+                            </div>
+                            
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 z-10 relative">
+                              <a href="https://youtu.be/kud_pvD169M?si=uvFlNsTNNgEmbr9j" target="_blank" rel="noopener noreferrer" className="text-3xl font-extrabold text-white tracking-tight hover:text-[#f38d3b] transition-colors">Nowhere</a>
+                              <div className="flex items-center gap-2 text-gray-400 text-sm">
+                                <span>by FS Team Publishing &</span>
+                                <FortiForesLink />
+                              </div>
                             </div>
                           </div>
                        </div>
